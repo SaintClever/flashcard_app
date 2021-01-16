@@ -13,6 +13,6 @@ for file_name in file_names:
 
 
     # export characters to txt
-    with open('extracted.txt', 'w') as file:
+    with open(f'{file_name}_extracted.txt', 'w') as file:
         for i in output:
             file.write(f'{i}\n')

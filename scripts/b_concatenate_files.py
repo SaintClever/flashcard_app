@@ -13,7 +13,7 @@ with open(f'{file_names[1]}.txt', 'r') as file:
 
 output = [f'{a}\n{b}' for a, b in zip(file1, file2)]
 
-with open('concatenated.csv', 'w') as file:
+with open(f'{file_names[0]}_concatenated.csv', 'w') as file:
     writer = csv.writer(file)
     for i in output:
         writer.writerow([i])
