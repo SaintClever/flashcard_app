@@ -78,9 +78,21 @@ btn_right.grid(column=1, row=2, pady=(0, 20))
 
 
 # language
-lang = Entry(foreground='#ffffff', background='#1c242b', width=55, justify='center')
-lang.insert(END, 'Choose lang')
-lang.grid(column=0, row=3, columnspan=2, pady=(0, 20))
+# lang = Entry(foreground='#ffffff', background='#1c242b', width=55, justify='center')
+# lang.insert(END, 'Choose lang')
+# lang.grid(column=0, row=3, columnspan=2, pady=(0, 20))
+
+
+def callback(selection):
+    print(selection)
+
+
+options = StringVar()
+menu = OptionMenu(window, options, 'Tagalog', 'Mandarin', 'Japanese', 'French', 'Thai', 'Spanish', 'German', 'Russian', 'Danish', 'Kazakh', command=callback)
+menu.grid(column=0, row=3, columnspan=2, pady=(0, 20))
+menu.config(width=25)
+options.set('Mandarin')
+
 
 random_word()
 window.mainloop()
