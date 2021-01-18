@@ -3,7 +3,7 @@ import pandas as pd
 from random import choice
 
 
-# unused colors: '#32373c', '#3c4146'
+# unused colors: '#1c242b', '#32373c', '#3c4146'
 BACKGROUND_COLOR = '#ffffff'
 FLIP_TIME = 5000
 
@@ -48,7 +48,7 @@ def is_known():
 
 # Window
 window = Tk()
-window.title('Flashy: flashcards')
+window.title('flashy flashcards')
 window.config(padx=0, pady=0, background=BACKGROUND_COLOR)
 window.resizable(False, False)
 flip_timer = window.after(3000, func=flip_card)
@@ -76,6 +76,11 @@ btn_right_img = PhotoImage(file='images/right.png')
 btn_right = Button(image=btn_right_img, highlightthickness=0, command=is_known)
 btn_right.grid(column=1, row=2, pady=(0, 20))
 
+
+# language
+lang = Entry(foreground='#ffffff', background='#1c242b', width=55, justify='center')
+lang.insert(END, 'Choose lang')
+lang.grid(column=0, row=3, columnspan=2, pady=(0, 20))
 
 random_word()
 window.mainloop()
