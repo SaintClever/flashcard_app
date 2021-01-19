@@ -13,9 +13,9 @@ df_to_dict = {}
 
 
 try:
-    df = pd.read_csv('data/words_to_learn.csv')
+    df = pd.read_csv(f'data/words_to_learn.csv')
 except FileNotFoundError:
-    original_df = pd.read_csv('data/mandarin_concatenated.csv')
+    original_df = pd.read_csv('data/mandarin.csv')
     df_to_dict = original_df.to_dict(orient='records')
 else:
     df_to_dict = df.to_dict(orient='records')
@@ -78,20 +78,23 @@ btn_right.grid(column=1, row=2, pady=(0, 20))
 
 
 # language
-# lang = Entry(foreground='#ffffff', background='#1c242b', width=55, justify='center')
-# lang.insert(END, 'Choose lang')
-# lang.grid(column=0, row=3, columnspan=2, pady=(0, 20))
+languages = ['Danish', 'French', 'German', 'Japanese', 'Kazakh', 'Mandarin', 'Russian', 'Spanish', 'Tagalog', 'Thai']
+
+options = StringVar(window)
+options.set('mandarin')
+menu = OptionMenu(window, options, *languages)
+menu.grid(column=0, row=3, columnspan=2)
+
+def selected_language(*args):
+    language = options.get()
+    pd.read_csv(f'data/{language.lower()}.csv')
+    canvas.itemconfig(card_word, text=current_word[language], fill='#000000')
+    # data.to_csv('data/words_to_learn.csv', index=False)
 
 
-def callback(selection):
-    print(selection)
+options.trace('w', selected_language)
 
 
-options = StringVar()
-menu = OptionMenu(window, options, 'Tagalog', 'Mandarin', 'Japanese', 'French', 'Thai', 'Spanish', 'German', 'Russian', 'Danish', 'Kazakh', command=callback)
-menu.grid(column=0, row=3, columnspan=2, pady=(0, 20))
-menu.config(width=25)
-options.set('Mandarin')
 
 
 random_word()
