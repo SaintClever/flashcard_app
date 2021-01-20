@@ -8,7 +8,7 @@ from playsound import playsound
 # unused colors: '#1c242b', '#32373c', '#3c4146'
 BACKGROUND_COLOR = '#ffffff'
 FLIP_TIME = 5000
-
+AUDIO_PLAYBACK_SPEED = 250
 
 # Window
 window = Tk()
@@ -58,7 +58,7 @@ def memorized_btn(*args):
         tts.save(f'audio/{language}.mp3')
         playsound(f'audio/{language}.mp3')
 
-    window.after(500, func=delay_sound) 
+    window.after(AUDIO_PLAYBACK_SPEED, func=delay_sound) 
 
 options.trace('w', memorized_btn)
 
