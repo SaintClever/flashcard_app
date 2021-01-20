@@ -2,8 +2,9 @@ from tkinter import *
 import pandas as pd
 from random import choice
 from gtts import gTTS
-from playsound import playsound
 from tempfile import TemporaryFile
+from playsound import playsound
+import pygame
 
 
 # ------------------------ variables ------------------------
@@ -14,11 +15,13 @@ AUDIO_PLAYBACK_SPEED = 250
 FONT = 'Century Gothic'
 
 
+
 # Window
 window = Tk()
 window.title('flashy flashcards')
 window.config(padx=0, pady=0, background=BACKGROUND_COLOR)
 window.resizable(False, False)
+
 
 
 # languages
@@ -38,6 +41,7 @@ lang_abbrev = {
 languages = list(lang_abbrev.keys())
 
 
+
 # ------------------------- option menu -------------------------
 options = StringVar(window)
 options.set(choice(languages))
@@ -51,13 +55,22 @@ dictionary_words = {}
 
 
 # ---------------------- audio ----------------------
-def delay_sound():
+def play_sound():
     language = options.get()
     read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
 
     tts = gTTS(text=read_word, lang=lang_abbrev[language])
     tts.save(f'audio/{language}.mp3')
     playsound(f'audio/{language}.mp3')
+
+    # or with pygame.mixer
+
+    # tts = gTTS(text=read_word, lang=lang_abbrev[language])
+    # tts.save(f'audio/{language}.mp3')
+    # pygame.mixer.init()
+    # pygame.mixer.music.load(f'audio/{language}.mp3')
+    # pygame.mixer.music.play(loops=0)
+
 
 
 # ---------------------- memorized btn ---------------------- 
@@ -73,9 +86,10 @@ def memorized_btn(*args):
     canvas.itemconfig(card_title, text=language, fill='#000000')
     canvas.itemconfig(card_word, text=current_word[language], fill='#000000')
 
-    window.after(AUDIO_PLAYBACK_SPEED, func=delay_sound) 
+    window.after(AUDIO_PLAYBACK_SPEED, func=play_sound) 
 
 options.trace('w', memorized_btn)
+
 
 
 # ---------------------- forgotten btn ----------------------
@@ -110,6 +124,7 @@ card_title = canvas.create_text(300, 165, text='Select', font=(FONT, 35, 'italic
 card_word = canvas.create_text(300, 265, text='Language', font=(FONT, 45, 'normal'), justify='center')
 canvas.config(background=BACKGROUND_COLOR, highlightthickness=0)
 canvas.grid(column=0, row=1, columnspan=2)
+
 
 
 # ------------------------------ btns ------------------------------
