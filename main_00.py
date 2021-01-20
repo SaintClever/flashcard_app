@@ -9,13 +9,11 @@ BACKGROUND_COLOR = '#ffffff'
 FLIP_TIME = 5000
 
 
-
 # Window
 window = Tk()
 window.title('flashy flashcards')
 window.config(padx=0, pady=0, background=BACKGROUND_COLOR)
 window.resizable(False, False)
-
 
 
 # language
@@ -24,9 +22,10 @@ languages = ['French', 'Mandarin'] # NOTE: dummy language list
 
 
 options = StringVar(window)
-options.set('Mandarin')
+options.set(choice(languages))
 menu = OptionMenu(window, options, *languages)
-menu.grid(column=0, row=3, columnspan=2)
+menu.config(width=53)
+menu.grid(column=0, row=2, columnspan=2, pady=(0, 20))
 
 
 current_word = {}
@@ -44,27 +43,28 @@ def memorized_btn(*args):
     canvas.itemconfig(card_img, image=card_front_img)
     canvas.itemconfig(card_title, text=language, fill='#000000')
     canvas.itemconfig(card_word, text=current_word[language], fill='#000000')
-
+    
 options.trace('w', memorized_btn)
 
 
 
 def forgotten_btn(*args):
+    language = options.get()
+
+    data = pd.DataFrame([current_word])
+    data.to_csv(f'data/{language}_to_learn.csv', mode='a', header=False, index=False)
     canvas.itemconfig(card_img, image=card_back_img)
-    canvas.itemconfig(card_title, text='English', fill='#ffffff')
-    canvas.itemconfig(card_word, text=current_word['English'], fill='#ffffff')
+
+    try:
+        canvas.itemconfig(card_title, text='English', fill='#ffffff')
+        canvas.itemconfig(card_word, text=current_word['English'], fill='#ffffff')
+    except KeyError:
+        canvas.itemconfig(card_title, text='Please select', fill='#ffffff')
+        canvas.itemconfig(card_word, text='a language', fill='#ffffff')
+    
+    window.after(FLIP_TIME, func=memorized_btn) # auto-flip to new random card
 
 options.trace('w', forgotten_btn)
-
-
-
-
-# df = pd.read_csv('data/Mandarin_to_learn.csv')
-# df_to_dict = df.to_dict(orient='records')
-
-
-
-
 
 
 # Card
@@ -83,12 +83,12 @@ canvas.grid(column=0, row=1, columnspan=2)
 # Buttons
 btn_crossed_img = PhotoImage(file='images/wrong.png')
 btn_wrong = Button(image=btn_crossed_img, highlightthickness=0, command=forgotten_btn)
-btn_wrong.grid(column=0, row=2, pady=(0, 20))
+btn_wrong.grid(column=0, row=3, pady=(0, 20))
 
 
 btn_right_img = PhotoImage(file='images/right.png')
 btn_right = Button(image=btn_right_img, highlightthickness=0, command=memorized_btn)
-btn_right.grid(column=1, row=2, pady=(0, 20))
+btn_right.grid(column=1, row=3, pady=(0, 20))
 
 
 
