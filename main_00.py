@@ -1,7 +1,8 @@
 from tkinter import *
 import pandas as pd
 from random import choice
-
+from gtts import gTTS
+from playsound import playsound
 
 
 # unused colors: '#1c242b', '#32373c', '#3c4146'
@@ -43,7 +44,22 @@ def memorized_btn(*args):
     canvas.itemconfig(card_img, image=card_front_img)
     canvas.itemconfig(card_title, text=language, fill='#000000')
     canvas.itemconfig(card_word, text=current_word[language], fill='#000000')
+
+    #audio
+    if language == 'Mandarin':
+        read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
+        lang = 'zh-cn'
+    elif language == 'French':
+        read_word = current_word[language]
+        lang = 'fr'
     
+    def delay_sound():
+        tts = gTTS(text=read_word, lang=lang)
+        tts.save(f'audio/{language}.mp3')
+        playsound(f'audio/{language}.mp3')
+
+    window.after(500, func=delay_sound) 
+
 options.trace('w', memorized_btn)
 
 
