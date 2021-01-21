@@ -2,7 +2,7 @@ import csv
 
 
 file_names = input('\nplease provide natal tongue and romanized txt files, no extension required [ex: filename filename]: ').split()
-# ex: ../data/mandarin_natal ../data/mandarin_romanized
+# ex: ../data/mandarin_natal ../data/mandarin_pinyin
 
 
 with open(f'{file_names[0]}.txt', 'r') as file:

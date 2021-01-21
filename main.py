@@ -26,16 +26,19 @@ window.resizable(False, False)
 
 # languages
 lang_abbrev = {
-    # 'Danish':'da',
+    'Danish':'da',
     'French':'fr',
-    # 'German':'de',
-    # 'Japanese':'ja',
+    'German':'de',
+    'Japanese':'ja',
     # 'Kazakh':'kk',
+    'Korean':'ko',
     'Mandarin':'zh-cn',
-    # 'Russian':'ru',
-    # 'Spanish':'es',
-    # 'Tagalog':'tl',
-    # 'Thai':'th'
+    'Romanian':'ro',
+    'Russian':'ru',
+    'Spanish':'es',
+    'Tagalog':'tl',
+    'Thai':'th',
+    'Vietnamese':'vi'
 }
 
 languages = list(lang_abbrev.keys())
@@ -100,7 +103,7 @@ def forgotten_btn(*args):
     language = options.get()
 
     data = pd.DataFrame([current_word])
-    data.to_csv(f'data/{language}_to_learn.csv', mode='a', header=False, index=False)
+    data.to_csv(f'languages_to_study/{language}_to_study.csv', mode='a', header=False, index=False)
     canvas.itemconfig(card_img, image=card_back_img)
     
     try:
