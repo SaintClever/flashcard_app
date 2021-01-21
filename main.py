@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import messagebox
 import pandas as pd
 from random import choice
 from gtts import gTTS
@@ -64,19 +63,19 @@ def play_audio():
     try:
         read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
 
-        tts = gTTS(text=read_word, lang=lang_abbrev[language])
-        tts.save(f'audio/{language}.mp3')
-        playsound(f'audio/{language}.mp3')
+        # tts = gTTS(text=read_word, lang=lang_abbrev[language])
+        # tts.save(f'audio/{language}.mp3')
+        # playsound(f'audio/{language}.mp3')
 
         # or with pygame.mixer
 
-        # tts = gTTS(text=read_word, lang=lang_abbrev[language])
-        # tts.save(f'audio/{language}.mp3')
-        # pygame.mixer.init()
-        # pygame.mixer.music.load(f'audio/{language}.mp3')
-        # pygame.mixer.music.play(loops=0)
+        tts = gTTS(text=read_word, lang=lang_abbrev[language])
+        tts.save(f'audio/{language}.mp3')
+        pygame.mixer.init()
+        pygame.mixer.music.load(f'audio/{language}.mp3')
+        pygame.mixer.music.play(loops=0)
     except ValueError:
-        messagebox.showinfo(title='Oops!', message=f'No audio present for {language}')
+        pass
 
 
 
