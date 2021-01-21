@@ -55,21 +55,21 @@ dictionary_words = {}
 
 
 # ---------------------- audio ----------------------
-def play_sound():
+def play_audio():
     language = options.get()
     read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
 
-    tts = gTTS(text=read_word, lang=lang_abbrev[language])
-    tts.save(f'audio/{language}.mp3')
-    playsound(f'audio/{language}.mp3')
+    # tts = gTTS(text=read_word, lang=lang_abbrev[language])
+    # tts.save(f'audio/{language}.mp3')
+    # playsound(f'audio/{language}.mp3')
 
     # or with pygame.mixer
 
-    # tts = gTTS(text=read_word, lang=lang_abbrev[language])
-    # tts.save(f'audio/{language}.mp3')
-    # pygame.mixer.init()
-    # pygame.mixer.music.load(f'audio/{language}.mp3')
-    # pygame.mixer.music.play(loops=0)
+    tts = gTTS(text=read_word, lang=lang_abbrev[language])
+    tts.save(f'audio/{language}.mp3')
+    pygame.mixer.init()
+    pygame.mixer.music.load(f'audio/{language}.mp3')
+    pygame.mixer.music.play(loops=0)
 
 
 
@@ -86,7 +86,10 @@ def memorized_btn(*args):
     canvas.itemconfig(card_title, text=language, fill='#000000')
     canvas.itemconfig(card_word, text=current_word[language], fill='#000000')
 
-    window.after(AUDIO_PLAYBACK_SPEED, func=play_sound) 
+    audio_icon_btn = Button(image=audio_icon_front, highlightthickness=0, command=play_audio)
+    audio_icon = canvas.create_window(565, 420, window=audio_icon_btn)
+
+    window.after(AUDIO_PLAYBACK_SPEED, func=play_audio) 
 
 options.trace('w', memorized_btn)
 
@@ -103,11 +106,14 @@ def forgotten_btn(*args):
     try:
         canvas.itemconfig(card_title, text='English', fill='#ffffff')
         canvas.itemconfig(card_word, text=current_word['English'], fill='#ffffff')
+        
+        audio_icon_btn = Button(image=audio_icon_back, highlightthickness=0, command=play_audio)
+        audio_icon = canvas.create_window(565, 420, window=audio_icon_btn)
     except KeyError:
         canvas.itemconfig(card_title, text='Please select', fill='#ffffff')
         canvas.itemconfig(card_word, text='a language', fill='#ffffff')
-    
-    window.after(FLIP_TIME, func=memorized_btn) # auto-flip to new random card
+
+    # window.after(FLIP_TIME, func=memorized_btn) # auto-flip to new random card
 
 options.trace('w', forgotten_btn)
 
@@ -118,10 +124,16 @@ canvas = Canvas(width=600, height=480)
 flags = PhotoImage(file='images/flags.png')
 card_front_img = PhotoImage(file='images/card_front.png')
 card_back_img = PhotoImage(file='images/card_back.png')
+card_back_img = PhotoImage(file='images/card_back.png')
+
 flag_banner = canvas.create_image(300, 0, image=flags)
 card_img = canvas.create_image(300, 265, image=card_front_img)
 card_title = canvas.create_text(300, 165, text='Select', font=(FONT, 35, 'italic'), justify='center')
 card_word = canvas.create_text(300, 265, text='Language', font=(FONT, 45, 'normal'), justify='center')
+
+audio_icon_front = PhotoImage(file='images/audio_icon_front.png')
+audio_icon_back = PhotoImage(file='images/audio_icon_back.png')
+
 canvas.config(background=BACKGROUND_COLOR, highlightthickness=0)
 canvas.grid(column=0, row=1, columnspan=2)
 
