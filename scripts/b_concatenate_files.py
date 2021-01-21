@@ -2,7 +2,7 @@ import csv
 
 
 file_names = input('\nplease provide natal tongue and romanized txt files, no extension required [ex: filename filename]: ').split()
-# ex: ../data/mandarin_natal ../data/mandarin_pinyin
+# ex: ../data/mandarin_natal ../data/mandarin_romanized
 
 
 with open(f'{file_names[0]}.txt', 'r') as file:
@@ -13,7 +13,7 @@ with open(f'{file_names[1]}.txt', 'r') as file:
 
 output = [f'{a}\n{b}' for a, b in zip(file1, file2)]
 
-with open(f'{file_names[0]}_concatenated.csv', 'w') as file:
+with open(f'{file_names[0]}_natal_and_roman.csv', 'w') as file:
     writer = csv.writer(file)
     for i in output:
         writer.writerow([i])

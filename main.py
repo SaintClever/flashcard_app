@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import pandas as pd
 from random import choice
 from gtts import gTTS
@@ -30,7 +31,7 @@ lang_abbrev = {
     'French':'fr',
     'German':'de',
     'Japanese':'ja',
-    # 'Kazakh':'kk',
+    'Kazakh':'kk',
     'Korean':'ko',
     'Mandarin':'zh-cn',
     'Romanian':'ro',
@@ -60,19 +61,22 @@ dictionary_words = {}
 # ---------------------- audio ----------------------
 def play_audio():
     language = options.get()
-    read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
+    try:
+        read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
 
-    # tts = gTTS(text=read_word, lang=lang_abbrev[language])
-    # tts.save(f'audio/{language}.mp3')
-    # playsound(f'audio/{language}.mp3')
+        tts = gTTS(text=read_word, lang=lang_abbrev[language])
+        tts.save(f'audio/{language}.mp3')
+        playsound(f'audio/{language}.mp3')
 
-    # or with pygame.mixer
+        # or with pygame.mixer
 
-    tts = gTTS(text=read_word, lang=lang_abbrev[language])
-    tts.save(f'audio/{language}.mp3')
-    pygame.mixer.init()
-    pygame.mixer.music.load(f'audio/{language}.mp3')
-    pygame.mixer.music.play(loops=0)
+        # tts = gTTS(text=read_word, lang=lang_abbrev[language])
+        # tts.save(f'audio/{language}.mp3')
+        # pygame.mixer.init()
+        # pygame.mixer.music.load(f'audio/{language}.mp3')
+        # pygame.mixer.music.play(loops=0)
+    except ValueError:
+        messagebox.showinfo(title='Oops!', message=f'No audio present for {language}')
 
 
 
@@ -143,14 +147,14 @@ canvas.grid(column=0, row=1, columnspan=2)
 
 
 # ------------------------------ btns ------------------------------
-btn_crossed_img = PhotoImage(file='images/wrong.png')
-btn_wrong = Button(image=btn_crossed_img, highlightthickness=0, command=forgotten_btn)
-btn_wrong.grid(column=0, row=3, pady=(0, 20))
+btn_forgot_img = PhotoImage(file='images/forgot_btn.png')
+btn_forgot = Button(image=btn_forgot_img, highlightthickness=0, command=forgotten_btn)
+btn_forgot.grid(column=0, row=3, pady=(0, 20))
 
 
-btn_right_img = PhotoImage(file='images/right.png')
-btn_right = Button(image=btn_right_img, highlightthickness=0, command=memorized_btn)
-btn_right.grid(column=1, row=3, pady=(0, 20))
+btn_memorize_img = PhotoImage(file='images/memorize_btn.png')
+btn_memorize = Button(image=btn_memorize_img, highlightthickness=0, command=memorized_btn)
+btn_memorize.grid(column=1, row=3, pady=(0, 20))
 
 
 
