@@ -4,7 +4,10 @@ import pandas as pd
 from random import choice
 from gtts import gTTS
 from playsound import playsound
-import pygame
+from pygame import mixer
+from glob import glob
+import os
+
 
 
 # ------------------------ variables ------------------------
@@ -57,15 +60,6 @@ dictionary_words = {}
 
 
 
-# ---------------------------- save_and_quit ----------------------------
-def save_and_quit():
-    if messagebox.askokcancel('quit', 'Save and quit your progress.'):
-        print('hello')
-        window.destroy()
-window.protocol('WM_DELETE_WINDOW', save_and_quit)
-
-
-
 # ---------------------- audio ----------------------
 def play_audio():
     # language = options.get()
@@ -81,9 +75,9 @@ def play_audio():
 
         tts = gTTS(text=read_word, lang=lang_abbrev[language])
         tts.save(f'audio/{language}.mp3')
-        pygame.mixer.init()
-        pygame.mixer.music.load(f'audio/{language}.mp3')
-        pygame.mixer.music.play(loops=0)
+        mixer.init()
+        mixer.music.load(f'audio/{language}.mp3')
+        mixer.music.play(loops=0)
     except ValueError:
         pass
 
@@ -140,6 +134,34 @@ def forgotten_btn(*args):
     # window.after(FLIP_TIME, func=memorized_btn) # auto-flip to new random card
 
 options.trace('w', forgotten_btn)
+
+
+
+# ---------------------------- save_files ----------------------------
+def save_files():
+    for csv_file in glob('languages_to_study/*.csv'):
+
+        file_name = csv_file.replace('languages_to_study/', '').replace('_to_study.csv', '')
+        csv_data = pd.read_csv(csv_file, names=[file_name, 'English']) # provide header
+        # print(csv_data.size)
+
+        csv_data_clearn = csv_data.drop_duplicates()
+        data = pd.DataFrame(csv_data_clearn)
+
+        # print(data.empty)
+        if data.empty: # if file is empty delete it else create the csv
+            os.remove(f'languages_to_study/{file_name}_to_study.csv')
+        else:
+            data.to_csv(f'languages_to_study/{file_name}_to_study.csv', index=False) # test_folder_path/{file_name}_to_study.csv
+
+
+
+# ---------------------------- save_and_quit ----------------------------
+def save_and_quit():
+    # if messagebox.askokcancel('quit', 'Save and quit your progress.'):
+    save_files()
+    window.destroy()
+window.protocol('WM_DELETE_WINDOW', save_and_quit)
 
 
 
