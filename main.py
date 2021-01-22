@@ -1,8 +1,8 @@
 from tkinter import *
+from tkinter import messagebox
 import pandas as pd
 from random import choice
 from gtts import gTTS
-from tempfile import TemporaryFile
 from playsound import playsound
 import pygame
 
@@ -50,19 +50,29 @@ options = StringVar(window)
 options.set(choice(languages))
 menu = OptionMenu(window, options, *languages)
 menu.config(width=53)
-menu.grid(column=0, row=2, columnspan=2, pady=(0, 20))
+menu.grid(column=0, row=2, columnspan=3, pady=(0, 20))
 
 current_word = {}
 dictionary_words = {}
 
 
 
+# ---------------------------- save_and_quit ----------------------------
+def save_and_quit():
+    if messagebox.askokcancel('quit', 'Save and quit your progress.'):
+        print('hello')
+        window.destroy()
+window.protocol('WM_DELETE_WINDOW', save_and_quit)
+
+
+
 # ---------------------- audio ----------------------
 def play_audio():
-    language = options.get()
+    # language = options.get()
+    language = list(current_word.keys())[0]
+
     try:
         read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
-
         # tts = gTTS(text=read_word, lang=lang_abbrev[language])
         # tts.save(f'audio/{language}.mp3')
         # playsound(f'audio/{language}.mp3')
@@ -84,6 +94,7 @@ def memorized_btn(*args):
     global current_word
 
     language = options.get()
+
     csv_words = pd.read_csv(f'data/{language}.csv')
     dictionary_words = csv_words.to_dict(orient='records')
 
@@ -103,10 +114,17 @@ options.trace('w', memorized_btn)
 
 # ---------------------- forgotten btn ----------------------
 def forgotten_btn(*args):
-    language = options.get()
+    # language = options.get()
+
+    try:
+        language = list(current_word.keys())[0]
+    except IndexError:
+        language = options.get()
+        
 
     data = pd.DataFrame([current_word])
     data.to_csv(f'languages_to_study/{language}_to_study.csv', mode='a', header=False, index=False)
+
     canvas.itemconfig(card_img, image=card_back_img)
     
     try:
@@ -141,7 +159,7 @@ audio_icon_front = PhotoImage(file='images/audio_icon_front.png')
 audio_icon_back = PhotoImage(file='images/audio_icon_back.png')
 
 canvas.config(background=BACKGROUND_COLOR, highlightthickness=0)
-canvas.grid(column=0, row=1, columnspan=2)
+canvas.grid(column=0, row=1, columnspan=3)
 
 
 
@@ -150,10 +168,13 @@ btn_forgot_img = PhotoImage(file='images/forgot_btn.png')
 btn_forgot = Button(image=btn_forgot_img, highlightthickness=0, command=forgotten_btn)
 btn_forgot.grid(column=0, row=3, pady=(0, 20))
 
+save_quit_img = PhotoImage(file='images/save_quit_btn.png')
+save_quit = Button(image=save_quit_img, highlightthickness=0, command=save_and_quit)
+save_quit.grid(column=1, row=3, pady=(0, 20))
 
 btn_memorize_img = PhotoImage(file='images/memorize_btn.png')
 btn_memorize = Button(image=btn_memorize_img, highlightthickness=0, command=memorized_btn)
-btn_memorize.grid(column=1, row=3, pady=(0, 20))
+btn_memorize.grid(column=2, row=3, pady=(0, 20))
 
 
 
