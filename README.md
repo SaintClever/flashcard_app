@@ -11,7 +11,7 @@
 - Unkown / forgotten words are stored in the languages_to_study directory
 - List of languages below and enjoy! :)
 
-Langes:
+Languages:
 - Danish
 - French
 - German
