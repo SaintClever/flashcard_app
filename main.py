@@ -78,6 +78,7 @@ def play_audio():
         mixer.init()
         mixer.music.load(f'audio/{language}.mp3')
         mixer.music.play(loops=0)
+        os.remove(f'audio/{language}.mp3')
     except ValueError:
         pass
 
