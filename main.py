@@ -17,11 +17,16 @@ FLIP_TIME = 5000
 AUDIO_PLAYBACK_SPEED = 250
 FONT = 'Century Gothic'
 
+# NOTE: Tkinter has compile problems with the path so it must be an absolute path
+AUDIO_PATH = '/Users/anonymous/Desktop/python_projects/multi_language_flashcard_app/audio/'
+DATA_PATH = '/Users/anonymous/Desktop/python_projects/multi_language_flashcard_app/data/'
+IMAGE_PATH = '/Users/anonymous/Desktop/python_projects/multi_language_flashcard_app/images/'
+LANGUAGES_TO_STUDY_PATH = '/Users/anonymous/Desktop/python_projects/multi_language_flashcard_app/languages_to_study/'
 
 
 # Window
 window = Tk()
-window.title('flashy flashcards')
+window.title('Multi-lang Flashcards')
 window.config(padx=0, pady=0, background=BACKGROUND_COLOR)
 window.resizable(False, False)
 
@@ -68,17 +73,17 @@ def play_audio():
     try:
         read_word = current_word[language].split()[0] # read the first chinese word, no pinyin
         # tts = gTTS(text=read_word, lang=lang_abbrev[language])
-        # tts.save(f'audio/{language}.mp3')
-        # playsound(f'audio/{language}.mp3')
+        # tts.save(f'{AUDIO_PATH}{language}.mp3')
+        # playsound(f'{AUDIO_PATH}{language}.mp3')
 
         # or with pygame.mixer
 
         tts = gTTS(text=read_word, lang=lang_abbrev[language])
-        tts.save(f'audio/{language}.mp3')
+        tts.save(f'{AUDIO_PATH}{language}.mp3')
         mixer.init()
-        mixer.music.load(f'audio/{language}.mp3')
+        mixer.music.load(f'{AUDIO_PATH}{language}.mp3')
         mixer.music.play(loops=0)
-        os.remove(f'audio/{language}.mp3')
+        os.remove(f'{AUDIO_PATH}{language}.mp3')
     except ValueError:
         pass
 
@@ -90,7 +95,7 @@ def memorized_btn(*args):
 
     language = options.get()
 
-    csv_words = pd.read_csv(f'data/{language}.csv')
+    csv_words = pd.read_csv(f'{DATA_PATH}{language}.csv')
     dictionary_words = csv_words.to_dict(orient='records')
 
     current_word = choice(dictionary_words)
@@ -118,7 +123,7 @@ def forgotten_btn(*args):
         
 
     data = pd.DataFrame([current_word])
-    data.to_csv(f'languages_to_study/{language}_to_study.csv', mode='a', header=False, index=False)
+    data.to_csv(f'{LANGUAGES_TO_STUDY_PATH}{language}_to_study.csv', mode='a', header=False, index=False)
 
     canvas.itemconfig(card_img, image=card_back_img)
     
@@ -140,9 +145,9 @@ options.trace('w', forgotten_btn)
 
 # ---------------------------- save_files ----------------------------
 def save_files():
-    for csv_file in glob('languages_to_study/*.csv'):
+    for csv_file in glob(f'{LANGUAGES_TO_STUDY_PATH}*.csv'):
 
-        file_name = csv_file.replace('languages_to_study/', '').replace('_to_study.csv', '')
+        file_name = csv_file.replace(f'{LANGUAGES_TO_STUDY_PATH}', '').replace('_to_study.csv', '')
         csv_data = pd.read_csv(csv_file, names=[file_name, 'English']) # provide header
         # print(csv_data.size)
 
@@ -151,9 +156,9 @@ def save_files():
 
         # print(data.empty)
         if data.empty: # if file is empty delete it else create the csv
-            os.remove(f'languages_to_study/{file_name}_to_study.csv')
+            os.remove(f'{LANGUAGES_TO_STUDY_PATH}{file_name}_to_study.csv')
         else:
-            data.to_csv(f'languages_to_study/{file_name}_to_study.csv', index=False) # test_folder_path/{file_name}_to_study.csv
+            data.to_csv(f'{LANGUAGES_TO_STUDY_PATH}{file_name}_to_study.csv', index=False) # test_folder_path/{file_name}_to_study.csv
 
 
 
@@ -168,18 +173,17 @@ window.protocol('WM_DELETE_WINDOW', save_and_quit)
 
 # ------------------------------ cards ------------------------------
 canvas = Canvas(width=600, height=480)
-flags = PhotoImage(file='images/flags.png')
-card_front_img = PhotoImage(file='images/card_front.png')
-card_back_img = PhotoImage(file='images/card_back.png')
-card_back_img = PhotoImage(file='images/card_back.png')
+flags = PhotoImage(file=f'{IMAGE_PATH}flags.png')
+card_front_img = PhotoImage(file=f'{IMAGE_PATH}card_front.png')
+card_back_img = PhotoImage(file=f'{IMAGE_PATH}card_back.png')
 
 flag_banner = canvas.create_image(300, 0, image=flags)
 card_img = canvas.create_image(300, 265, image=card_front_img)
 card_title = canvas.create_text(300, 165, text='Select', font=(FONT, 35, 'italic'), justify='center')
 card_word = canvas.create_text(300, 265, text='Language', font=(FONT, 45, 'normal'), justify='center')
 
-audio_icon_front = PhotoImage(file='images/audio_icon_front.png')
-audio_icon_back = PhotoImage(file='images/audio_icon_back.png')
+audio_icon_front = PhotoImage(file=f'{IMAGE_PATH}audio_icon_front.png')
+audio_icon_back = PhotoImage(file=f'{IMAGE_PATH}audio_icon_back.png')
 
 canvas.config(background=BACKGROUND_COLOR, highlightthickness=0)
 canvas.grid(column=0, row=1, columnspan=3)
@@ -187,15 +191,15 @@ canvas.grid(column=0, row=1, columnspan=3)
 
 
 # ------------------------------ btns ------------------------------
-btn_forgot_img = PhotoImage(file='images/forgot_btn.png')
+btn_forgot_img = PhotoImage(file=f'{IMAGE_PATH}forgot_btn.png')
 btn_forgot = Button(image=btn_forgot_img, highlightthickness=0, command=forgotten_btn)
 btn_forgot.grid(column=0, row=3, pady=(0, 20))
 
-save_quit_img = PhotoImage(file='images/save_quit_btn.png')
+save_quit_img = PhotoImage(file=f'{IMAGE_PATH}save_quit_btn.png')
 save_quit = Button(image=save_quit_img, highlightthickness=0, command=save_and_quit)
 save_quit.grid(column=1, row=3, pady=(0, 20))
 
-btn_memorize_img = PhotoImage(file='images/memorize_btn.png')
+btn_memorize_img = PhotoImage(file=f'{IMAGE_PATH}memorize_btn.png')
 btn_memorize = Button(image=btn_memorize_img, highlightthickness=0, command=memorized_btn)
 btn_memorize.grid(column=2, row=3, pady=(0, 20))
 
