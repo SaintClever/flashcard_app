@@ -13,7 +13,7 @@ NOTE: PC not available
 Run .py file
 - Run python main.py
 - Select your desired language to learn or study a random one at start up
-- Unkown / forgotten words are stored in the languages_to_study directory
+- Unknown / forgotten words are stored in the languages_to_study directory
 - List of languages below and enjoy! :)
 
 Languages:
